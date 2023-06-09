@@ -16,7 +16,6 @@ class _TimeWidgetState extends State<TimeWidget> {
     if (time == null) {
       return "Select Time";
     } else {
-      print('${time?.hour}');
       return "${time?.hour}:${time?.minute}  ${time?.period.name}";
     }
   }

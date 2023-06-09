@@ -1,7 +1,5 @@
 import 'package:event_app/NavDrawer/NavDrawer.dart';
-import 'package:event_app/screens/home.dart';
 import 'package:event_app/screens/post.dart';
-import 'package:event_app/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -22,16 +20,18 @@ class _homeScreenState extends State<homeScreen> {
   bool isHide = false;
   int _index = 0;
   List bottomItems = [];
+  Map d = {};
 
   @override
   void initState() {
     // testApi();
+    d = widget.data;
     setState(() {
       bottomItems = [
-   Home(),
         Column(),
-        PostScreen(),
-       profile(),
+        Column(),
+        PostScreen(data: d),
+        Column(),
       ];
     });
   }
@@ -41,7 +41,7 @@ class _homeScreenState extends State<homeScreen> {
     return Scaffold(
       key: _key,
       backgroundColor: bgColor,
-      drawer: navdrawer(),
+      drawer: navigationDrawer(allData: d),
       appBar: AppBar(
         backgroundColor: transparent_overlay,
         elevation: 0.0,

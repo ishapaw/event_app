@@ -1,154 +1,206 @@
-import 'package:event_app/NavDrawer/nav_screen/about_us.dart';
-import 'package:event_app/NavDrawer/nav_screen/contact_us.dart';
-import 'package:event_app/NavDrawer/nav_screen/invite.dart';
-import 'package:event_app/NavDrawer/nav_screen/privacy_policy.dart';
-import 'package:event_app/NavDrawer/nav_screen/settings.dart';
+import 'dart:io';
+import 'package:event_app/Usefull/Colors.dart';
 import 'package:flutter/material.dart';
-
-import '../Usefull/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:iconsax/iconsax.dart';
 
-class navdrawer extends StatefulWidget {
-  const navdrawer({Key? key}) : super(key: key);
+import '../screens/my_events.dart';
+import '../screens/sign_in.dart';
+import 'nav_screen/about_us.dart';
+import 'nav_screen/contact_us.dart';
+import 'nav_screen/invite.dart';
+import 'nav_screen/privacy_policy.dart';
+import 'nav_screen/settings.dart';
+
+class navigationDrawer extends StatefulWidget {
+  Map<dynamic, dynamic> allData;
+  navigationDrawer({Key? key, required this.allData}) : super(key: key);
 
   @override
-  State<navdrawer> createState() => _navdrawerState();
+  State<navigationDrawer> createState() => _navigationDrawerState();
 }
 
-class _navdrawerState extends State<navdrawer> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  String username = "";
-  String id = "";
+class _navigationDrawerState extends State<navigationDrawer> {
   @override
-  void initState() {
-    super.initState();
-    fetchDatabaseList();
+  void onAboutUs() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const AboutUs()));
   }
 
-  void fetchDatabaseList() async {
-    final user = FirebaseAuth.instance.currentUser!;
-    final DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('user').doc(user.uid).get();
-    setState(() {
-      username = userDoc.get('name');
-      id = userDoc.get('email');
+  void event() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const MyEvents()));
+  }
+
+  void onContactUs() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const ContactUs()));
+  }
+
+  void onPrivacyPolicy() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const PrivacyPolicy()));
+  }
+
+  void logOut() {
+    FirebaseAuth.instance.signOut().then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Signin()));
     });
+  }
+
+  void onInvite() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const Invite()));
+  }
+
+  void onSettings() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const setting()));
+  }
+
+  void initState() {
+    super.initState();
+    if (widget.allData['photo'] != null) {
+      setState(() {
+        // circleImage = Image.network(widget.allData['photo'],
+        // fit: BoxFit.cover);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Container(
-            child: ListView(padding: EdgeInsets.all(0), children: [
-      UserAccountsDrawerHeader(
-        accountName: Text(username,
-            style: TextStyle(
-                fontFamily: "Aboreto",
-                fontSize: 20,
-                fontWeight: FontWeight.bold)),
-        accountEmail: Text(id),
-        currentAccountPicture: CircleAvatar(
-          child: ClipOval(
-              child: Image.asset(
-            "Assets/images/sample.jpg",
-            width: 90,
-            height: 90,
-            fit: BoxFit.cover,
-          )),
-        ),
-        decoration: BoxDecoration(
-          color: secColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(24),
-            bottomRight: Radius.circular(24),
+      backgroundColor: mainColor,
+      child: Column(
+        children: [
+          buildHeder(context, widget.allData),
+          buildMenu(context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildHeder(BuildContext context, Map data) {
+    return DrawerHeader(
+        decoration: BoxDecoration(color: mainColor),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                mainText("Avent", Colors.black, 24.0, FontWeight.w800, 1),
+                const Spacer(),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget buildMenu(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          color: mainColor,
+          height: 0.4,
+          child: Row(
+            children: [const Spacer()],
           ),
         ),
-      ),
-      ListTile(
-        leading: Icon(Icons.settings),
-        title: Text(
-          "Settings",
-          style: TextStyle(fontSize: 16),
+        const SizedBox(
+          height: 10.0,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => setting()));
-        }),
-      ),
-      Divider(
-        color: secColor,
-      ),
-      ListTile(
-        leading: Icon(Icons.share),
-        title: Text(
-          "Invite",
-          style: TextStyle(fontSize: 16),
+        ListTile(
+          leading: const Icon(Iconsax.calendar),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title: mainTextLeft(
+              "My Events", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: event,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Invite()));
-        }),
-      ),
-      Divider(
-        color: secColor,
-      ),
-      ListTile(
-        leading: Icon(Icons.info),
-        title: Text(
-          "AboutUs",
-          style: TextStyle(fontSize: 16),
+        ListTile(
+          leading: const Icon(Iconsax.info_circle),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title: mainTextLeft(
+              "About Us", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: onAboutUs,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AboutUs()));
-        }),
-      ),
-      ListTile(
-        leading: Icon(Icons.contact_emergency),
-        title: Text(
-          "ContactUs",
-          style: TextStyle(fontSize: 16),
+        ListTile(
+          leading: const Icon(Iconsax.call),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title:
+              mainTextLeft("Contact", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: onContactUs,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ContactUs()));
-        }),
-      ),
-      Divider(
-        color: secColor,
-      ),
-      ListTile(
-        leading: Icon(Icons.privacy_tip),
-        title: Text(
-          "Privacy Policies",
-          style: TextStyle(fontSize: 16),
+        ListTile(
+          leading: const Icon(Iconsax.shield),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title: mainTextLeft(
+              "Privacy Policy", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: onPrivacyPolicy,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PrivacyPolicy()));
-        }),
-      ),
-      Divider(
-        color: secColor,
-      ),
-      ListTile(
-        leading: Icon(Icons.logout),
-        title: Text(
-          "Log Out",
-          style: TextStyle(fontSize: 16),
+        ListTile(
+          leading: const Icon(Iconsax.user_cirlce_add),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title:
+              mainTextLeft("Invite", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: onInvite,
         ),
-        iconColor: Colors.black,
-        onTap: (() {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PrivacyPolicy()));
-        }),
-      ),
-    ])));
+        ListTile(
+          leading: const Icon(Iconsax.setting),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title: mainTextLeft(
+              "Settings", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: onSettings,
+        ),
+        ListTile(
+          leading: const Icon(Iconsax.logout),
+          iconColor: Colors.black,
+          visualDensity: const VisualDensity(vertical: -3),
+          focusColor: bgColor,
+          selectedTileColor: bgColor,
+          selectedColor: bgColor,
+          title:
+              mainTextLeft("Logout", Colors.black, 16.0, FontWeight.normal, 1),
+          onTap: () {
+            logOut();
+          },
+        ),
+        SizedBox(
+          height: 100.0,
+        ),
+      ],
+    );
   }
 }
+
+// Future <List<String>> fetchUrl() async{
+//   final response = await http.get("https://gefgkerg.com" as Uri);
+//
+// }

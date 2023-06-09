@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:event_app/Usefull/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:event_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,6 @@ void insertData(
     'category': category
   };
   User? user = FirebaseAuth.instance.currentUser;
-  print(user);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? uid = user?.uid;
 
@@ -82,4 +82,37 @@ String generateRandomString(int len) {
   const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
+}
+
+Widget card() {
+  return Center(
+    child: Container(
+      child: Column(
+        children: [
+          Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: mainColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(7),
+                ),
+                image: DecorationImage(
+                    image: AssetImage("Assets/images/event.jpg"),
+                    fit: BoxFit.cover),
+              ),
+              child: Column()),
+          Text("description:  ${desc_controller.text}")
+        ],
+      ),
+    ),
+  );
+}
+
+String? get() {
+  User? user = FirebaseAuth.instance.currentUser;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String? uid = user?.uid;
+
+  return uid;
 }

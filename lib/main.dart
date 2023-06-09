@@ -1,22 +1,18 @@
 import 'package:event_app/Backend/backend.dart';
 import 'package:event_app/Homes/HomeScreen.dart';
-import 'package:event_app/Introduction%20screens/Contact.dart';
-import 'package:event_app/Introduction%20screens/city.dart';
 import 'package:event_app/NavDrawer/NavDrawer.dart';
 import 'package:event_app/NavDrawer/nav_screen/about_us.dart';
-
 import 'package:event_app/Usefull/Colors.dart';
 import 'package:event_app/Usefull/Functions.dart';
 import 'package:event_app/screens/home.dart';
 import 'package:event_app/screens/post.dart';
-import 'package:event_app/screens/profile.dart';
 import 'package:event_app/screens/sign_in.dart';
 import 'package:event_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:event_app/Usefull/Colors.dart';
-import 'package:event_app/Introduction screens/Avatar.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -25,10 +21,7 @@ void main() async {
     // home:Signin(),
     debugShowCheckedModeBanner: false,
     theme: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.cyan),
-    home: avatar(data: {})
-
-
-
+    home: Splash(),
   ));
 }
 

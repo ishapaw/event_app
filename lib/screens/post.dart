@@ -4,7 +4,6 @@ import 'package:event_app/screens/sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../Backend/helper.dart';
 import '../Usefull/Colors.dart';
 import '../Usefull/Buttons.dart';
 import '../Usefull/Functions.dart';
@@ -16,7 +15,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({Key? key}) : super(key: key);
+  Map data;
+  PostScreen({Key? key, required this.data}) : super(key: key);
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -53,18 +53,8 @@ class _PostScreenState extends State<PostScreen> {
   @override
   void initState() {
     super.initState();
-
-    HelperFunctions.getuserNameSharePreference().then((value) {
-      setState(() {
-        _text = value.toString();
-      });
-    });
-
-    HelperFunctions.getuserEmailSharePreference().then((value) {
-      setState(() {
-        _mail = value.toString();
-      });
-    });
+    _text = widget.data['name'];
+    print(_text);
   }
 
   String getText() {
@@ -398,7 +388,7 @@ class _PostScreenState extends State<PostScreen> {
 
                       setState(() {
                         date = newDate;
-                        event_date = DateFormat('MM/dd/yyyy').format(date!);
+                        event_date = DateFormat('d MMM yyyy').format(date!);
                         // super.setState(() {});
                       });
                     }, secColor)
@@ -425,8 +415,9 @@ class _PostScreenState extends State<PostScreen> {
 
                       setState(() {
                         time = newTime;
-                        event_time =
-                            "${time?.hour}:${time?.minute}  ${time?.period.name}";
+                        event_time = (time?.minute)! < 10
+                            ? "${time?.hour}:0${time?.minute}  ${time?.period.name}"
+                            : "${time?.hour}:${time?.minute}  ${time?.period.name}";
                       });
                     }, secColor)
                   ],

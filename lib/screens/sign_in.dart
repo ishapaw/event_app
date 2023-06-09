@@ -1,10 +1,12 @@
 import 'package:event_app/Backend/backend.dart';
+
 import 'package:event_app/Usefull/Buttons.dart';
 import 'package:event_app/Usefull/Colors.dart';
 import 'package:event_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
@@ -260,9 +262,7 @@ class _SigninState extends State<Signin> {
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
                   checker(context),
-                  print('ho gya'),
-                  setState(() {
-                  }),
+                  setState(() {}),
                 });
       } on FirebaseAuthException catch (e) {
         if (e.code == "user-not-found") {
